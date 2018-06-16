@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import {List, InputItem,NavBar, WingBlank, WhiteSpace, Button} from 'antd-mobile'
 import logo from './logo.svg';
-// import Timer from './auth'
+import Timer from './auth'
 import './App.css';
 import axios from 'axios'
 class App extends Component {
@@ -10,8 +10,8 @@ class App extends Component {
     this.state = {
       tel:'',
       pwd:'',
-      telReady:fase,
-      msg:''
+      telReady:false,
+      msg:'',
     }
     this.handleChange = this.handleChange.bind(this)
     this.handleClick = this.handleClick.bind(this)
@@ -81,30 +81,28 @@ class App extends Component {
     return (
       <div className="App">
         <NavBar mode="dark">登录</NavBar>
-
         {this.state.msg&&this.state.msg?<p style={{color:'red'}}>{this.state.msg}</p>:null}
-
+        <WingBlank></WingBlank>
         <InputItem　 placeholder="手机号" 
         pattern="^((1[0-9]))\\d{9}$"　
         onChange={(v)=>this.handleChange('tel',v)}>
         </InputItem>
-
+        <WingBlank></WingBlank>
         <Button  type="ghost" size="small" style={{width:150}} onClick={this.handleClick}>
-        {
-          this.state.getCode?null:"获得验证码"
-        }
+          {this.state.telReady?<Timer></Timer>:'获取验证码'}
         </Button>
-
+        <WingBlank></WingBlank>
         <InputItem placeholder="验证码">
         {this.state.captcha}
 				</InputItem>
-        
+        <WingBlank></WingBlank>
         <InputItem　
           placeholder="密码(不少于６位)" 
           type = "password"
           onChange={(v)=>this.handleChange('pwd',v)}
         >    
         </InputItem>
+        <WingBlank></WingBlank>
         <Button　type='primary'　onClick={this.handleSumit}>注册</Button>
 
       </div>

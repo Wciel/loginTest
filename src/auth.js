@@ -7,34 +7,30 @@ class Timer extends Component {
   constructor(props) {
       super(props)
       this.state = {
-          countingDone:false,
-          IdCode:''
+        btnText: '获取验证码',
+        timer: 59,
+        discodeBtn: false,
+        clearInterval: false
       }
-      this.handleClick = this.handleClick.bind(this)
   }
-  handleClick(){
-    console.log("haha获得验证码")
-    axios.get('https://easy-mock.com/mock/5b2385e3debe3c5977248a16/wscn/captcha')
-      .then(res=>{
-        if (res.status === 200){
-          console.log(res)
-          this.setState({
-            IdCode:res.data.data.captcha
-          })
+  componentWillMount(){
+   let siv = setInterval(() => {
+    this.setState({ timer: (this.state.timer-1), btnText: this.state.timer, discodeBtn: true }, () => {
+        if (this.state.timer === 0) {
+            clearInterval(siv);
+            this.setState({ btnText: '重新发送', discodeBtn: false })
         }
-      })
-  }
+    });
+  }, 1000);
+ }
 
   render() {
     return (
-        <div>
-          <InputItem>
-            {this.state.countingDone?<span>hehe</span>:<span onClick={this.handleClick}>获取验证码</span>}
-          　<span>{this.state.IdCode}</span>
-          </InputItem>
-        </div>
+        <span>
+          {this.state.btnText}
+        </span>
     )
   }
 }
 
-export default Auth
+export default Timer
