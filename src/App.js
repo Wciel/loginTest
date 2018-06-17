@@ -12,8 +12,9 @@ class App extends Component {
       pwd:'',
       telReady:false,
       msg:'',
-      captcha:'验证码',
-      fistTimer:true,
+      captcha:'',
+      captchaMsg:'验证码',
+      isBtnUsable:true,
       restart:false,
       btnText: '获取验证码',
       timer: 4,
@@ -26,7 +27,21 @@ class App extends Component {
     this.time = this.time.bind(this)
   }
 
+　//定时器
+  time(){
+    let siv = setInterval(() => {
+      this.setState((prevState)=>({ timer: (prevState.timer-1), btnText: prevState.timer, discodeBtn: true}), () => {
 
+        if (this.state.timer === 0) {
+              clearInterval(siv);
+              this.setState({ btnText: '重新发送', discodeBtn: false,isBtnUsable:true,timer:5 })
+          }
+      });
+    }, 1000);
+  }
+
+
+  //将输入框的值设为状态
   handleChange(key,val){
     this.setState({
       [key]:val
@@ -37,7 +52,7 @@ class App extends Component {
   handleClick(){
       //验证手机格式是否符合，符合则获取验证码，不符合返回错误信息
       const re = /^[1][3,4,5,7,8][0-9]{9}$/
-      if (re.test(this.state.tel)){
+      if (re.test(this.state.tel) ){
 
         //如果手机格式正确，
         this.setState({
@@ -46,20 +61,21 @@ class App extends Component {
         })
 
         //这里是在一分钟之内不能再次点击,firstTimer变为true才能点击
-        console.log(this.state.timer,this.state.fistTimer,this.state.restart)
-        if(this.state.fistTimer) {
+        // console.log(this.state.timer,this.state.isBtnUsable,this.state.restart)
+        if(this.state.isBtnUsable) {
           this.time()
           axios.get('https://easy-mock.com/mock/5b2385e3debe3c5977248a16/wscn/captcha')
           .then(res=>{
             if (res.status === 200){
               console.log(res)
               this.setState({
-                captcha:res.data.data.captcha
+                captcha:res.data.data.captcha,
+                captchaMsg:""
               })
             }
           })
           this.setState({
-            fistTimer:false
+            isBtnUsable:false
           })
         }
       }else{
@@ -98,27 +114,8 @@ class App extends Component {
       }
     }
   }
-  
-  time(){
-    let siv = setInterval(() => {
-      this.setState({ timer: (this.state.timer-1), btnText: this.state.timer, discodeBtn: true }, () => {
-         
-        if (this.state.timer === 0) {
-              clearInterval(siv);
-              this.setState({ btnText: '重新发送', discodeBtn: false })
-          }
-      });
-    }, 1000);
-  }
 
   render() {
-    //这里来判断是否重新发送
-    if(this.state.timer === 0 && !this.state.fistTimer){
-      this.setState({
-        fistTimer:true,
-        timer:5
-      })
-    }
     return (
       <div className="App">
         <NavBar mode="dark">登录</NavBar>
@@ -135,10 +132,11 @@ class App extends Component {
           size="small" 
           style={{width:150}} 
           onClick={this.handleClick}>
-          {this.state.telReady?<span>{this.state.btnText}</span>:"获取验证码"}
+          {this.state.telReady?<span>{this.state.btnText}s</span>:"获取验证码"}
         </Button>
         
-        <InputItem placeholder={this.state.captcha}>
+        <InputItem placeholder={this.state.captchaMsg}  >
+          {this.state.captcha}
 				</InputItem>
       
         <InputItem　

@@ -14,7 +14,7 @@ class Timer extends Component {
   }
   time(){
     let siv = setInterval(() => {
-      this.setState({ timer: (this.state.timer-1), btnText: this.state.timer, discodeBtn: true }, () => {
+      this.setState((propState)=>({ timer: (propSttate.timer-1), btnText: propSttate.timer, discodeBtn: true}), () => {
         this.props.getTimerInfo(this.state.timer) 
          
         if (this.state.timer === 0) {
@@ -31,15 +31,15 @@ class Timer extends Component {
     }
   }
 
- handleClick(){
-   if (this.props.restart){
-     this.setState({
-      timer: 6,
-      discodeBtn: false,
-      clearInterval: false
-     })
-   }
- }
+//  handleClick(){
+//    if (this.props.restart&&){
+//      this.setState({
+//       timer: 6,
+//       discodeBtn: false,
+//       clearInterval: false
+//      })
+//    }
+//  }
 
  componentDidUpdate(){
    console.log(this.state.timer)
